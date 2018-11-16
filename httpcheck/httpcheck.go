@@ -20,3 +20,12 @@ func ExecuteRequest(request *http.Request, router *mux.Router) (responseRecorder
 	router.ServeHTTP(responseRecorder, request)
 	return responseRecorder
 }
+
+// ExecuteAuthorizedRequest makes an http request with the router provided and returns the responseRecorder
+// but will append an authorization token beforehand
+func ExecuteAuthorizedRequest(request *http.Request, router *mux.Router, token string) (responseRecorder *httptest.ResponseRecorder) {
+	request.Header.Add("Authorization", token)
+	responseRecorder = httptest.NewRecorder()
+	router.ServeHTTP(responseRecorder, request)
+	return responseRecorder
+}
