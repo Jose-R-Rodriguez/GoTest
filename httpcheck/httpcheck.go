@@ -13,6 +13,40 @@ type canServeHTTP interface {
 	ServeHTTP(http.ResponseWriter, *http.Request)
 }
 
+// EndpointTester will test an endpoint
+type EndpointTester struct {
+	Token *string
+	*httptest.ResponseRecorder
+}
+
+// CreateEndPointTesterFunc is a curried function who's goal is to provide tests partially to an endpoint
+// with an EndpointTester struct you can receive the response and enable authorization for the test
+func (et *EndpointTester) CreateEndPointTesterFunc(method string, URL string, router canServeHTTP) func(exp int, payload []byte) func(*testing.T) {
+	return func(exp int, payload []byte) func(*testing.T) {
+		req, _ := http.NewRequest(method, URL, bytes.NewBuffer(payload))
+		if et.Token != nil {
+			et.ResponseRecorder = ExecuteAuthorizedRequest(req, router, *et.Token)
+		} else {
+			et.ResponseRecorder = ExecuteRequest(req, router)
+		}
+		return func(t *testing.T) {
+			ResponseCode(t, exp, et.ResponseRecorder.Code)
+		}
+	}
+}
+
+// CreateEndPointTesterFunc is a curried function who's goal is to provide tests partially to an endpoint
+// if you need use of a JWT authorization token then use the variation from the EndpointTester version
+func CreateEndPointTesterFunc(method string, URL string, router canServeHTTP) func(exp int, payload []byte) func(*testing.T) {
+	return func(exp int, payload []byte) func(*testing.T) {
+		req, _ := http.NewRequest(method, URL, bytes.NewBuffer(payload))
+		response := ExecuteRequest(req, router)
+		return func(t *testing.T) {
+			ResponseCode(t, exp, response.Code)
+		}
+	}
+}
+
 // ResponseCode asserts both codes should be equal, otherwise fails the test
 func ResponseCode(t *testing.T, expected, actual int) {
 	assertions.Assert(t, assertions.FailLater, expected == actual, "Got http code %d, expected code %d\n", actual, expected)
@@ -32,16 +66,4 @@ func ExecuteAuthorizedRequest(request *http.Request, router canServeHTTP, token 
 	responseRecorder = httptest.NewRecorder()
 	router.ServeHTTP(responseRecorder, request)
 	return responseRecorder
-}
-
-// TestEndpoint is a curried function who's goal is to provide tests partially to an endpoint
-// use: endPointTester := TestEndpoint("GET", "/this/is/a/route.com")
-func TestEndpoint(method string, URL string, router canServeHTTP) func(exp int, payload []byte) func(*testing.T) {
-	return func(exp int, payload []byte) func(*testing.T) {
-		req, _ := http.NewRequest(method, URL, bytes.NewBuffer(payload))
-		response := ExecuteRequest(req, router)
-		return func(t *testing.T) {
-			ResponseCode(t, exp, response.Code)
-		}
-	}
 }
