@@ -15,8 +15,8 @@ type canServeHTTP interface {
 
 // EndpointTester will test an endpoint
 type EndpointTester struct {
-	Token *string
-	*httptest.ResponseRecorder
+	Token    *string
+	Response *httptest.ResponseRecorder
 }
 
 // CreateEndPointTesterFunc is a curried function who's goal is to provide tests partially to an endpoint
@@ -25,12 +25,12 @@ func (et *EndpointTester) CreateEndPointTesterFunc(method string, URL string, ro
 	return func(exp int, payload []byte) func(*testing.T) {
 		req, _ := http.NewRequest(method, URL, bytes.NewBuffer(payload))
 		if et.Token != nil {
-			et.ResponseRecorder = ExecuteAuthorizedRequest(req, router, *et.Token)
+			et.Response = ExecuteAuthorizedRequest(req, router, *et.Token)
 		} else {
-			et.ResponseRecorder = ExecuteRequest(req, router)
+			et.Response = ExecuteRequest(req, router)
 		}
 		return func(t *testing.T) {
-			ResponseCode(t, exp, et.ResponseRecorder.Code)
+			ResponseCode(t, exp, et.Response.Code)
 		}
 	}
 }
