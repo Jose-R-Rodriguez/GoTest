@@ -33,6 +33,11 @@ func NewAuthEndpointTester(method string, url string, router httpServer, token s
 	return &EndpointTester{method: method, url: url, router: router, Token: &token}
 }
 
+// ChangeEndpoint will change the method and url up for testing
+func (et *EndpointTester) ChangeEndpoint(method string, url string) {
+	et.method, et.url = method, url
+}
+
 // Test will execute a request on the url with the given method and return a test function to be used in a subtest
 // to describe it's functionality
 func (et *EndpointTester) Test(exp int, payload []byte) func(*testing.T) {
