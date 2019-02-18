@@ -10,13 +10,12 @@ import (
 type fakeRouter struct{}
 
 func (fr fakeRouter) ServeHTTP(http.ResponseWriter, *http.Request) {}
-func ExampleTestEndpoint() {
+func ExampleEndpointTester_Test() {
 	// this would be your testing function
 	func(t *testing.T) {
-		googleGetter := httpcheck.TestEndpoint("GET", "google.com", fakeRouter{})
-		t.Run("this tests an empty payload to a google.com with a GET request", googleGetter(http.StatusOK, nil))
-		t.Run("You could also call it to test sites dynamically like", httpcheck.TestEndpoint("POST", "facebook.com", fakeRouter{})(http.StatusAccepted, nil))
-		// of course you could just use the testing function yourself like so
-		httpcheck.TestEndpoint("PUT", "myspace.com", fakeRouter{})(http.StatusAccepted, nil)(t)
+		googleGetter := httpcheck.NewEndpointTester("GET", "google.com", fakeRouter{})
+		t.Run("this tests an empty payload to a google.com with a GET request", googleGetter.Test(323, nil))
+		t.Run("this is another option", httpcheck.NewEndpointTester("GET", "google.com", fakeRouter{}).Test(http.StatusAccepted, nil))
+		httpcheck.NewEndpointTester("PUT", "myspace.com", fakeRouter{}).Test(http.StatusAccepted, nil)(t)
 	}(&testing.T{})
 }
