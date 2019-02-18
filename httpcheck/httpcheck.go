@@ -28,6 +28,11 @@ func NewEndpointTester(method string, url string, router httpServer) (response *
 	return &EndpointTester{method: method, url: url}
 }
 
+// NewAuthEndpointTester is the same as NewEndpointTester but sets an authentication token
+func NewAuthEndpointTester(method string, url string, router httpServer, token string) *EndpointTester {
+	return &EndpointTester{method: method, url: url, Token: &token}
+}
+
 // Test will execute a request on the url with the given method and return a test function to be used in a subtest
 // to describe it's functionality
 func (et *EndpointTester) Test(exp int, payload []byte) func(*testing.T) {
