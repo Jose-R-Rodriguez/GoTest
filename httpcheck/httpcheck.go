@@ -25,12 +25,12 @@ type EndpointTester struct {
 // NewEndpointTester creates a new endpoint tester object receiving a method and a url, this object's purpose is to just
 // provide a constant wrap around checking response codes and executing requests to the same url with the same mmethod
 func NewEndpointTester(method string, url string, router httpServer) (response *EndpointTester) {
-	return &EndpointTester{method: method, url: url}
+	return &EndpointTester{method: method, url: url, router: router}
 }
 
 // NewAuthEndpointTester is the same as NewEndpointTester but sets an authentication token
 func NewAuthEndpointTester(method string, url string, router httpServer, token string) *EndpointTester {
-	return &EndpointTester{method: method, url: url, Token: &token}
+	return &EndpointTester{method: method, url: url, router: router, Token: &token}
 }
 
 // Test will execute a request on the url with the given method and return a test function to be used in a subtest
