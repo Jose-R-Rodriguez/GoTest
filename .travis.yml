@@ -1,0 +1,16 @@
+sudo: false
+
+language: go
+  - 1.12.x
+
+install:
+  - go get ./...
+
+script:
+  - go test -race -coverprofile=cp.out ./...
+
+notifications:
+  email: false
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -F unittests
