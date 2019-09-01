@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"testing"
 
-	"github.com/Jose-R-Rodriguez/Golang_Assertions/httpcheck"
+	"github.com/jramonrod/go-test/httpcheck"
 )
 
 type fakeRouter struct{}

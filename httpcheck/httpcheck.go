@@ -6,7 +6,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/Jose-R-Rodriguez/Golang_Assertions/assertions"
+	"github.com/jramonrod/go-test/assertions"
 )
 
 type httpServer interface {
