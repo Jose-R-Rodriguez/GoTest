@@ -15,4 +15,4 @@ notifications:
   email: false
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -F unittests
+  - bash <(curl -s https://codecov.io/bash) -f cp.out
