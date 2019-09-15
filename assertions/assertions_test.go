@@ -91,3 +91,38 @@ func TestOk(t *testing.T) {
 		})
 	})
 }
+
+func TestEquals(t *testing.T) {
+	t.Run("Equals", func(t *testing.T) {
+		t.Run("values are not equal calls fail now", func(t *testing.T) {
+			mockTB := mockTB{}
+			assertions.Equals(&mockTB, 3232, 22)
+			if mockTB.failCalls != 1 {
+				t.Fail()
+			}
+		})
+		t.Run("values are equal doesn't call failure", func(t *testing.T) {
+			mockTB := mockTB{}
+			assertions.Equals(&mockTB, 55, 55)
+			if mockTB.failCalls > 0 || mockTB.failNowCalls > 0 {
+				t.Fail()
+			}
+		})
+	})
+	t.Run("EqualsNow", func(t *testing.T) {
+		t.Run("values are not equal calls fail now", func(t *testing.T) {
+			mockTB := mockTB{}
+			assertions.EqualsNow(&mockTB, 4, 8)
+			if mockTB.failNowCalls != 1 {
+				t.Fail()
+			}
+		})
+		t.Run("values are equal doesn't call failure", func(t *testing.T) {
+			mockTB := mockTB{}
+			assertions.EqualsNow(&mockTB, 3, 3)
+			if mockTB.failCalls > 0 || mockTB.failNowCalls > 0 {
+				t.Fail()
+			}
+		})
+	})
+}
