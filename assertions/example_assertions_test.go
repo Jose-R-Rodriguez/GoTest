@@ -13,7 +13,7 @@ func ExampleOk() {
 
 func ExampleOkNow() {
 	assertions.OkNow(&mockTB{}, errors.New("example error"))
-	// Output: [31massertions.go:35: unexpected error: example error[39m
+	// Output: [31massertions.go:40: unexpected error: example error[39m
 }
 
 func ExampleAssert() {
@@ -23,7 +23,7 @@ func ExampleAssert() {
 
 func ExampleAssertNow() {
 	assertions.AssertNow(&mockTB{}, 3 == 4, "custom message %s%s", "custom str 2", "custom strings")
-	// Output: [31massertions.go:21: custom message custom str 2custom strings[39m
+	// Output: [31massertions.go:16: custom message custom str 2custom strings[39m
 }
 
 func ExampleEquals_int() {
