@@ -54,7 +54,7 @@ func (et *EndpointTester) Test(exp int, payload []byte) func(*testing.T) {
 
 // ResponseCode asserts both codes should be equal, otherwise fails the test
 func ResponseCode(t *testing.T, expected, actual int) {
-	assertions.Assert(t, assertions.FailLater, expected == actual, "Got http code %d, expected code %d\n", actual, expected)
+	assertions.Assert(t, expected == actual, "Got http code %d, expected code %d\n", actual, expected)
 }
 
 // ExecuteRequest makes an http request with the router provided and returns the response
